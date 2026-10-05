@@ -1,0 +1,1 @@
+- [Transitive vulnerability refresh](pnpm-vulnerability-lockfile.md) — workspace overrides need a targeted pnpm update to replace existing locked transitive versions.
