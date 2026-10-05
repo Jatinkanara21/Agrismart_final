@@ -585,7 +585,7 @@ export const GetFertilizerRecommendationResponse = zod.object({
 
 
 /**
- * @summary List live crop market prices
+ * @summary List recent market prices from the official Government of India mandi feed
  */
 export const ListMarketPricesQueryParams = zod.object({
   "crop": zod.coerce.string().optional(),
@@ -594,49 +594,29 @@ export const ListMarketPricesQueryParams = zod.object({
   "date": zod.date().optional()
 })
 
-export const ListMarketPricesResponseItem = zod.object({
-  "id": zod.number(),
+export const ListMarketPricesResponse = zod.object({
+  "status": zod.enum(['available', 'unavailable']),
+  "source": zod.string(),
+  "sourceUrl": zod.string(),
+  "retrievedAt": zod.coerce.date().nullable().describe('Time AgriSmart last queried the official feed.'),
+  "message": zod.string(),
+  "records": zod.array(zod.object({
+  "id": zod.string(),
   "cropName": zod.string(),
   "variety": zod.string().nullish(),
+  "grade": zod.string().nullish(),
   "state": zod.string(),
+  "district": zod.string(),
   "market": zod.string(),
+  "originalMarketPrice": zod.number().describe('The earliest unmodified modal price available for this market item within the recent-data window.'),
+  "originalMarketDate": zod.coerce.date().describe('Arrival date for the original source-reported modal price.'),
+  "currentPrice": zod.number().describe('The latest unmodified modal price reported for this market item.'),
   "minPrice": zod.number(),
   "maxPrice": zod.number(),
-  "modalPrice": zod.number(),
-  "unit": zod.string().optional(),
-  "date": zod.coerce.date()
-})
-export const ListMarketPricesResponse = zod.array(ListMarketPricesResponseItem)
-
-
-/**
- * @summary List available crop names for filtering
- */
-export const ListAvailableCropsResponseItem = zod.string()
-export const ListAvailableCropsResponse = zod.array(ListAvailableCropsResponseItem)
-
-
-/**
- * @summary Get crop price predictions and trend analysis
- */
-export const ListPricePredictionsQueryParams = zod.object({
-  "crop": zod.coerce.string()
-})
-
-export const ListPricePredictionsResponse = zod.object({
-  "cropName": zod.string(),
-  "historical": zod.array(zod.object({
-  "date": zod.string(),
-  "price": zod.number()
-})),
-  "predicted": zod.array(zod.object({
-  "date": zod.string(),
-  "price": zod.number(),
-  "isForecasted": zod.boolean()
-})),
-  "bestSellingMonth": zod.string(),
-  "trend": zod.enum(['rising', 'falling', 'stable']),
-  "avgPrice": zod.number().optional()
+  "unit": zod.string(),
+  "marketDate": zod.coerce.date().describe('Arrival date reported by the source; the source does not provide a time of day.'),
+  "source": zod.string()
+}))
 })
 
 

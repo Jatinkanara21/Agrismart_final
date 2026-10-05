@@ -7,15 +7,25 @@
  */
 
 export interface MarketPrice {
-  id: number;
+  id: string;
   cropName: string;
   /** @nullable */
   variety?: string | null;
+  /** @nullable */
+  grade?: string | null;
   state: string;
+  district: string;
   market: string;
+  /** The earliest unmodified modal price available for this market item within the recent-data window. */
+  originalMarketPrice: number;
+  /** Arrival date for the original source-reported modal price. */
+  originalMarketDate: Date;
+  /** The latest unmodified modal price reported for this market item. */
+  currentPrice: number;
   minPrice: number;
   maxPrice: number;
-  modalPrice: number;
-  unit?: string;
-  date: Date;
+  unit: string;
+  /** Arrival date reported by the source; the source does not provide a time of day. */
+  marketDate: Date;
+  source: string;
 }

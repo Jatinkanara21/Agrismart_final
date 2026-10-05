@@ -540,7 +540,7 @@ paths:
     get:
       operationId: listMarketPrices
       tags: [prices]
-      summary: List live crop market prices
+      summary: List recent market prices from the official Government of India mandi feed
       parameters:
         - name: crop
           in: query
@@ -561,47 +561,11 @@ paths:
             format: date
       responses:
         "200":
-          description: Market price list
+          description: Current price records and feed availability
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/MarketPrice"
-
-  /market-prices/crops:
-    get:
-      operationId: listAvailableCrops
-      tags: [prices]
-      summary: List available crop names for filtering
-      responses:
-        "200":
-          description: Available crops
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-
-  /market-prices/predictions:
-    get:
-      operationId: listPricePredictions
-      tags: [prices]
-      summary: Get crop price predictions and trend analysis
-      parameters:
-        - name: crop
-          in: query
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Price predictions with trend data
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PricePrediction"
+                $ref: "#/components/schemas/MarketPriceFeed"
 
   # ─── Weather ────────────────────────────────────────────────────────────────
   /weather:
@@ -1043,65 +1007,80 @@ components:
     # ── Market Prices ──────────────────────────────────────────────────────
     MarketPrice:
       type: object
-      required: [id, cropName, state, market, minPrice, maxPrice, modalPrice, date]
+      required:
+        - id
+        - cropName
+        - state
+        - district
+        - market
+        - originalMarketPrice
+        - originalMarketDate
+        - currentPrice
+        - minPrice
+        - maxPrice
+        - unit
+        - marketDate
+        - source
       properties:
         id:
-          type: number
+          type: string
         cropName:
           type: string
         variety:
           type: ["string", "null"]
+        grade:
+          type: ["string", "null"]
         state:
+          type: string
+        district:
           type: string
         market:
           type: string
+        originalMarketPrice:
+          type: number
+          description: The earliest unmodified modal price available for this market item within the recent-data window.
+        originalMarketDate:
+          type: string
+          format: date
+          description: Arrival date for the original source-reported modal price.
+        currentPrice:
+          type: number
+          description: The latest unmodified modal price reported for this market item.
         minPrice:
           type: number
         maxPrice:
           type: number
-        modalPrice:
-          type: number
         unit:
           type: string
-        date:
+        marketDate:
           type: string
           format: date
+          description: Arrival date reported by the source; the source does not provide a time of day.
+        source:
+          type: string
 
-    PricePrediction:
+    MarketPriceFeed:
       type: object
-      required: [cropName, historical, predicted, bestSellingMonth, trend]
+      required: [status, source, sourceUrl, retrievedAt, message, records]
       properties:
-        cropName:
+        status:
           type: string
-        historical:
+          enum: [available, unavailable]
+        source:
+          type: string
+        sourceUrl:
+          type: string
+        retrievedAt:
+          type: ["string", "null"]
+          format: date-time
+          description: Time AgriSmart last queried the official feed.
+        message:
+          type: string
+        records:
           type: array
           items:
-            type: object
-            required: [date, price]
-            properties:
-              date:
-                type: string
-              price:
-                type: number
-        predicted:
-          type: array
-          items:
-            type: object
-            required: [date, price, isForecasted]
-            properties:
-              date:
-                type: string
-              price:
-                type: number
-              isForecasted:
-                type: boolean
-        bestSellingMonth:
-          type: string
-        trend:
-          type: string
-          enum: [rising, falling, stable]
-        avgPrice:
-          type: number
+            $ref: "#/components/schemas/MarketPrice"
+
 
     # ── Weather ────────────────────────────────────────────────────────────
     WeatherForecast:

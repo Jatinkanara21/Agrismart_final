@@ -40,9 +40,7 @@ import type {
   ListExpensesParams,
   ListFertilizerRecommendationsParams,
   ListMarketPricesParams,
-  ListPricePredictionsParams,
-  MarketPrice,
-  PricePrediction,
+  MarketPriceFeed,
   RoleUpdate,
   UserProfile,
   UserProfileUpdate,
@@ -1977,11 +1975,11 @@ export const getListMarketPricesUrl = (params?: ListMarketPricesParams,) => {
 }
 
 /**
- * @summary List live crop market prices
+ * @summary List recent market prices from the official Government of India mandi feed
  */
-export const listMarketPrices = async (params?: ListMarketPricesParams, options?: Parameters<typeof customFetch>[1]): Promise<MarketPrice[]> => {
+export const listMarketPrices = async (params?: ListMarketPricesParams, options?: Parameters<typeof customFetch>[1]): Promise<MarketPriceFeed> => {
 
-  return customFetch<MarketPrice[]>(getListMarketPricesUrl(params),
+  return customFetch<MarketPriceFeed>(getListMarketPricesUrl(params),
   {
     ...options,
     method: 'GET'
@@ -2024,7 +2022,7 @@ export type ListMarketPricesQueryError = ErrorType<unknown>
 
 
 /**
- * @summary List live crop market prices
+ * @summary List recent market prices from the official Government of India mandi feed
  */
 
 export function useListMarketPrices<TData = Awaited<ReturnType<typeof listMarketPrices>>, TError = ErrorType<unknown>>(
@@ -2033,167 +2031,6 @@ export function useListMarketPrices<TData = Awaited<ReturnType<typeof listMarket
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getListMarketPricesQueryOptions(params,options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-
-export const getListAvailableCropsUrl = () => {
-
-
-
-
-  return `/api/market-prices/crops`
-}
-
-/**
- * @summary List available crop names for filtering
- */
-export const listAvailableCrops = async ( options?: Parameters<typeof customFetch>[1]): Promise<string[]> => {
-
-  return customFetch<string[]>(getListAvailableCropsUrl(),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
-
-export const getListAvailableCropsQueryKey = () => {
-    return [
-    `/api/market-prices/crops`
-    ] as const;
-    }
-
-
-export const getListAvailableCropsQueryOptions = <TData = Awaited<ReturnType<typeof listAvailableCrops>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAvailableCrops>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getListAvailableCropsQueryKey();
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAvailableCrops>>> = ({ signal }) => listAvailableCrops({ signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAvailableCrops>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type ListAvailableCropsQueryResult = NonNullable<Awaited<ReturnType<typeof listAvailableCrops>>>
-export type ListAvailableCropsQueryError = ErrorType<unknown>
-
-
-/**
- * @summary List available crop names for filtering
- */
-
-export function useListAvailableCrops<TData = Awaited<ReturnType<typeof listAvailableCrops>>, TError = ErrorType<unknown>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAvailableCrops>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
-
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getListAvailableCropsQueryOptions(options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-
-export const getListPricePredictionsUrl = (params: ListPricePredictionsParams,) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : String(value))
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/api/market-prices/predictions?${stringifiedParams}` : `/api/market-prices/predictions`
-}
-
-/**
- * @summary Get crop price predictions and trend analysis
- */
-export const listPricePredictions = async (params: ListPricePredictionsParams, options?: Parameters<typeof customFetch>[1]): Promise<PricePrediction> => {
-
-  return customFetch<PricePrediction>(getListPricePredictionsUrl(params),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
-
-export const getListPricePredictionsQueryKey = (params?: ListPricePredictionsParams,) => {
-    return [
-    `/api/market-prices/predictions`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getListPricePredictionsQueryOptions = <TData = Awaited<ReturnType<typeof listPricePredictions>>, TError = ErrorType<unknown>>(params: ListPricePredictionsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPricePredictions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getListPricePredictionsQueryKey(params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPricePredictions>>> = ({ signal }) => listPricePredictions(params, { signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPricePredictions>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type ListPricePredictionsQueryResult = NonNullable<Awaited<ReturnType<typeof listPricePredictions>>>
-export type ListPricePredictionsQueryError = ErrorType<unknown>
-
-
-/**
- * @summary Get crop price predictions and trend analysis
- */
-
-export function useListPricePredictions<TData = Awaited<ReturnType<typeof listPricePredictions>>, TError = ErrorType<unknown>>(
- params: ListPricePredictionsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listPricePredictions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
-
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getListPricePredictionsQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
