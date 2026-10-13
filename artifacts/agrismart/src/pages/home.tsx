@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans selection:bg-primary/20">
       <header className="border-b bg-card/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+        <div className="container mx-auto px-4 h-12 flex items-center justify-between xl:h-14">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center text-primary-foreground">
               <Sprout className="h-5 w-5" />
@@ -26,30 +26,31 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="pt-24 pb-32 px-4 relative overflow-hidden">
+        <section className="relative overflow-hidden px-4 pt-14 pb-20 sm:pt-16 sm:pb-24 md:pt-18 xl:pt-24 xl:pb-32">
           <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_right,var(--color-primary)_0%,transparent_40%)] opacity-[0.05]" />
           
           <div className="container mx-auto max-w-5xl relative z-10 text-center">
-            <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary mb-8">
+            <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary mb-6">
               <Leaf className="mr-2 h-4 w-4" />
               The modern operating system for your farm
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground mb-8 leading-[1.1]">
-              Manage your farm with <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">confidence.</span>
+            <h1 className="mx-auto mb-8 max-w-4xl text-4xl font-bold leading-none tracking-tight text-foreground sm:text-5xl xl:text-7xl">
+              Manage your farm with{" "}
+              <span className="hero-gradient-text block">confidence.</span>
             </h1>
             
-            <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
+            <p className="mx-auto mb-4 max-w-2xl text-base leading-relaxed text-muted-foreground sm:mb-8 sm:text-lg xl:text-xl">
               AgriSmart provides intelligent decision support, real-time market insights, and comprehensive tracking for modern Indian farmers. Your expert agronomist in your pocket.
             </p>
             
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" className="h-14 px-8 text-base bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20" asChild>
+              <Button size="lg" className="h-10 px-6 text-sm bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 sm:h-11 sm:px-8 sm:text-base xl:h-14" asChild>
                 <Link href="/sign-up">
                   Start Managing Your Farm <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="h-14 px-8 text-base border-border hover:bg-accent hover:text-accent-foreground" asChild>
+              <Button size="lg" variant="outline" className="h-10 px-6 text-sm border-border hover:bg-accent hover:text-accent-foreground sm:h-11 sm:px-8 sm:text-base xl:h-14" asChild>
                 <Link href="/sign-in">
                   Sign In to Dashboard
                 </Link>

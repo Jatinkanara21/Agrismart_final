@@ -190,6 +190,26 @@
   }
 }
 
+@layer components {
+  .hero-gradient-text {
+    color: hsl(var(--primary));
+  }
+
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .hero-gradient-text {
+      background-image: linear-gradient(
+        90deg,
+        hsl(var(--primary)),
+        hsl(var(--secondary))
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+}
+
 @layer utilities {
   input[type='search']::-webkit-search-cancel-button {
     @apply hidden;
