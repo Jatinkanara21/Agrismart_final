@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { useListMarketPrices } from "@workspace/api-client-react";
+import {
+  getListMarketPricesQueryKey,
+  useListMarketPrices,
+} from "@workspace/api-client-react";
 import {
   AlertTriangle,
   CalendarDays,
@@ -64,7 +67,13 @@ export default function MarketPrices() {
     refetch,
   } = useListMarketPrices(
     { crop: cropFilter || undefined },
-    { query: { refetchInterval: 5 * 60 * 1000, retry: 1 } },
+    {
+      query: {
+        queryKey: getListMarketPricesQueryKey({ crop: cropFilter || undefined }),
+        refetchInterval: 5 * 60 * 1000,
+        retry: 1,
+      },
+    },
   );
 
   const unavailableMessage = isError
